@@ -3,6 +3,10 @@ import cors from "cors";
 
 const app = express();
 
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ extended: true, limit: "10mb" }));
+app.use(express.text({ type: "*/*", limit: "10mb" }));
+
 app.use(cors());
 app.use(express.json({ limit: "10mb" }));
 
@@ -17,6 +21,35 @@ app.get("/", (req, res) => {
 app.post("/predict", async (req, res) => {
   try {
     const { imageUrl } = req.body;
+
+    app.post("/predict", async (req, res) => {
+  let imageUrl = null;
+
+  if (req.body && typeof req.body === "object") {
+    imageUrl = req.body.imageUrl;
+  }
+
+  if (!imageUrl && typeof req.body === "string") {
+    try {
+      const parsedBody = JSON.parse(req.body.trim());
+      imageUrl = parsedBody.imageUrl;
+    } catch (error) {
+      console.log("JSON 파싱 에러:", error.message);
+    }
+  }
+
+  if (!imageUrl && req.query) {
+    imageUrl = req.query.imageUrl;
+  }
+
+  if (!imageUrl) {
+    return res.status(400).json({
+      error: "imageUrl is required",
+      receivedBody: req.body
+    });
+  }
+
+  // 여기서부터 아래는 기존의 Roboflow 관련 코드를 그대로 두시면 됩니다!
 
     if (!imageUrl) {
       return res.status(400).json({ error: "imageUrl is required" });
