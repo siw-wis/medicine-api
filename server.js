@@ -41,7 +41,7 @@ app.post("/predict", async (req, res) => {
       imageUrl = req.query.imageUrl;
     }
 
-    // 검증: 모든 경로에서 imageUrl 추출을 실패했을 때
+// 검증: 모든 경로에서 imageUrl 추출을 실패했을 때
     if (!imageUrl) {
       return res.status(400).json({
         error: "imageUrl is required",
@@ -50,11 +50,18 @@ app.post("/predict", async (req, res) => {
       });
     }
 
-    // 👈 [교정 2] 중복되었던 옛날 불필요한 코드를 모두 정리하고 Roboflow 로직과 바로 연결했습니다.
+    // ────────── [여기에 코드가 추가되었습니다] ──────────
+    // 1. http:// 주소를 안전한 https:// 주소로 강제 변환합니다.
+    const fixedImageUrl = imageUrl.replace("http://", "https://");
+    // 2. 인공지능이 주소를 읽을 수 있게 안전하게 인코딩(글자 변환)합니다.
+    const encodedImageUrl = encodeURIComponent(fixedImageUrl);
+    // ──────────────────────────────────────────────────
+
+    // 👈 [교정 2] Roboflow 로직에 인코딩된 주소(encodedImageUrl)를 넣어 연결합니다.
     const roboflowUrl =
       `https://serverless.roboflow.com/${ROBOFLOW_MODEL_ID}/${ROBOFLOW_VERSION}` +
       `?api_key=${ROBOFLOW_API_KEY}` +
-      `&image=${encodeURIComponent(imageUrl)}` +
+      `&image=${encodedImageUrl}` + // 👈 이 부분이 encodedImageUrl로 바뀌어야 합니다!
       `&format=json`;
 
     const response = await fetch(roboflowUrl, { method: "POST" });
