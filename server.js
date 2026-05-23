@@ -19,10 +19,6 @@ app.get("/", (req, res) => {
 });
 
 app.post("/predict", async (req, res) => {
-  try {
-    const { imageUrl } = req.body;
-
-    app.post("/predict", async (req, res) => {
   let imageUrl = null;
 
   if (req.body && typeof req.body === "object") {
