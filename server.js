@@ -74,11 +74,24 @@ app.post("/predict", async (req, res) => {
       });
     }
 
-    const name = data.top;
+const name = data.top;
     const confidence = data.confidence;
     const percent = Math.round(confidence * 100);
 
-    res.json({ name, confidence, percent, raw: data });
+    // ────────── [여기에 코드가 추가되었습니다] ──────────
+    // 스마트폰이 읽을 음성 안내 문장을 생성합니다.
+    const speechText = `판별 결과는 ${name}입니다. 확률은 ${percent}퍼센트입니다.`;
+    // ──────────────────────────────────────────────────
+
+    // 퉁커블이 필요한 모든 변수명(name, medicineName, speechText 등)을 다 얹어서 대답합니다.
+    res.json({ 
+      name: name,
+      confidence: confidence,
+      percent: percent,
+      medicineName: name,     // 꿀단지 글에서 요구한 알약 이름 변수명
+      speechText: speechText, // 꿀단지 글에서 요구한 음성 안내 문장
+      raw: data 
+    });
   } catch (error) {
     res.status(500).json({ error: "Server error", message: error.message });
   }
