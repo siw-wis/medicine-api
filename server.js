@@ -74,13 +74,28 @@ app.post("/predict", async (req, res) => {
       });
     }
 
-const name = data.top;
-    const confidence = data.confidence;
-    const percent = Math.round(confidence * 100);
+// 1. 인공지능 결과(data)에서 가장 확률이 높은 알약 이름과 점수 찾기
+    let medicineName = "알 수 없음";
+    let confidence = 0;
 
-// 퉁커블 화면에 약이름과 확률만 따로따로 보내주는 코드입니다.
+    // [형식 A] predictions 배열로 결과가 오는 경우
+    if (data.predictions && Array.isArray(data.predictions) && data.predictions.length > 0) {
+      const best = data.predictions.reduce((best, current) => current.confidence > best.confidence ? current : best);
+      medicineName = best.class || best.name || "알 수 없음";
+      confidence = best.confidence || 0;
+    } 
+    // [형식 B] top 형태로 결과가 오는 경우
+    else if (data.top) {
+      medicineName = data.top;
+      confidence = data.confidence || 0;
+    }
+
+    // 2. 소수점 확률(예: 0.925)을 반올림된 퍼센트 숫자(93)로 변환
+    let percent = confidence <= 1 ? Math.round(confidence * 100) : Math.round(confidence);
+
+    // 3. 퉁커블이 기다리는 딱 2개의 주머니에 예쁘게 담아서 보냅니다.
     res.json({ 
-      medicineName: name, 
+      medicineName: medicineName, 
       percent: percent 
     });
   } catch (error) {
