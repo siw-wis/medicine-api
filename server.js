@@ -74,7 +74,7 @@ app.post("/predict", async (req, res) => {
       });
     }
 
-    const name = data.top;
+const name = data.top;
     const confidence = data.confidence;
     const percent = Math.round(confidence * 100);
 
