@@ -9,9 +9,9 @@ app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 app.use(express.text({ type: "*/*", limit: "10mb" }));
 
-const ROBOFLOW_API_KEY = process.env.ROBOFLOW_API_KEY;
-const ROBOFLOW_MODEL_ID = process.env.ROBOFLOW_MODEL_ID; 
-const ROBOFLOW_VERSION = process.env.ROBOFLOW_VERSION;
+const ROBOFLOW_API_KEY = "wz4k4Lfn43IknMloFnuE";
+const ROBOFLOW_MODEL_ID = "simsim"; 
+const ROBOFLOW_VERSION = "2";
 
 app.get("/", (req, res) => {
   res.json({ status: "Medicine API is running" });
