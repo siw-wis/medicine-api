@@ -11,7 +11,7 @@ app.use(express.text({ type: "*/*", limit: "10mb" }));
 
 const ROBOFLOW_API_KEY = "wz4k4Lfn43IknMloFnuE";
 const ROBOFLOW_MODEL_ID = "simsim"; 
-const ROBOFLOW_VERSION = "2";
+const ROBOFLOW_VERSION = "3";
 
 app.get("/", (req, res) => {
   res.json({ status: "Medicine API is running" });
